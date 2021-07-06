@@ -11,7 +11,7 @@
 
         <EditText
             android:id="@+id/username"
-            style="@style/Widget.AppCompat.EditText.InputField"
+            style="@style/Widget.AppCompat.EditText.InputFieldWithBackground"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -24,31 +24,39 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
 
-        <EditText
-            android:id="@+id/password"
-            style="@style/Widget.AppCompat.EditText.InputField"
+        <LinearLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="348dp"
             android:layout_marginEnd="16dp"
-            android:hint="@string/password_hint"
-            android:inputType="textPassword"
-            android:singleLine="true"
+            android:background="@drawable/react_background"
+            android:orientation="horizontal"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent">
 
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="180dp"
-            android:layout_height="158dp"
-            android:layout_marginStart="140dp"
-            android:layout_marginTop="508dp"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/anim_cut_the_eye" />
+            <EditText
+                android:id="@+id/password"
+                style="@style/Widget.AppCompat.EditText.InputField"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:fontFamily="@font/roboto_mono"
+                android:hint="@string/password_hint"
+                android:inputType="textPassword"
+                android:singleLine="true" />
+
+            <ImageView
+                android:id="@+id/password_image_view"
+                android:layout_width="36dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="4dp"
+                android:paddingRight="8dp"
+                tools:src="@drawable/anim_cut_the_eye" />
+
+        </LinearLayout>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

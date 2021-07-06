@@ -2,10 +2,12 @@ package com.example.datastore
 
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.appcompat.content.res.AppCompatResources
+import android.widget.EditText
+import android.widget.ImageView
 import androidx.fragment.app.Fragment
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
@@ -32,43 +34,57 @@ class FirstFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setUpPassword()
-
-        setUpImageView()
+        setUpPasswordView(binding.passwordImageView, binding.password)
     }
 
-    private fun setUpImageView() {
-        binding.imageView.setImageDrawable(
+    private fun setUpPasswordView(imageView: ImageView, editText: EditText) {
+        imageView.setImageDrawable(
             AnimatedVectorDrawableCompat.create(
                 requireContext(),
                 R.drawable.anim_cut_the_eye
             )!!
         )
 
-        binding.imageView.setOnClickListener(object : View.OnClickListener {
+        imageView.setOnClickListener(object : View.OnClickListener {
             var isCut = false
 
             override fun onClick(v: View?) {
-                val drawable = binding.imageView.drawable as AnimatedVectorDrawableCompat
+                val drawable = imageView.drawable as AnimatedVectorDrawableCompat
 
                 drawable.registerAnimationCallback(object : Animatable2Compat.AnimationCallback() {
-                    override fun onAnimationEnd(drawable: Drawable?) {
-                        super.onAnimationEnd(drawable)
+                    override fun onAnimationEnd(d: Drawable?) {
+                        super.onAnimationEnd(d)
+
+                        drawable.unregisterAnimationCallback(this)
 
                         isCut = !isCut
 
-                        val avd: AnimatedVectorDrawableCompat = if (isCut) {
-                            AnimatedVectorDrawableCompat.create(
+                        val avd: AnimatedVectorDrawableCompat
+
+                        if (isCut) {
+                            avd = AnimatedVectorDrawableCompat.create(
                                 requireContext(),
                                 R.drawable.anim_remove_the_cut
                             )!!
+
+                            editText.performAndRestoreCursorPosition {
+                                editText.inputType =
+                                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
+                            }
+
                         } else {
-                            AnimatedVectorDrawableCompat.create(
+                            avd = AnimatedVectorDrawableCompat.create(
                                 requireContext(),
                                 R.drawable.anim_cut_the_eye
                             )!!
+
+                            editText.performAndRestoreCursorPosition {
+                                editText.inputType =
+                                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                            }
+
                         }
-                        binding.imageView.setImageDrawable(avd)
+                        imageView.setImageDrawable(avd)
                     }
                 })
 
@@ -77,21 +93,13 @@ class FirstFragment : Fragment() {
         })
     }
 
-    private fun setUpPassword() {
-        val on =
-            AppCompatResources.getDrawable(requireContext(), R.drawable.visibility_on)!!
-        // // val visibilityOffDrawable =
-        // //     AppCompatResources.getDrawable(requireContext(), R.drawable.visiblity_off)
-        //
-        //
-        // on.callback
-        //
-        binding.password.setCompoundDrawablesWithIntrinsicBounds(null, null, on, null)
-
-        // binding.password.setOnTouchListener(
-        //
-        // )
+    private fun EditText.performAndRestoreCursorPosition(operation: () -> Unit) {
+        val selectionStart = this.selectionStart
+        val selectionEnd = this.selectionEnd
+        operation.invoke()
+        this.setSelection(selectionStart, selectionEnd)
     }
+
 
     override fun onDestroyView() {
         super.onDestroyView()
