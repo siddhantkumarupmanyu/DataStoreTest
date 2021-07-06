@@ -46,10 +46,9 @@
             android:layout_height="158dp"
             android:layout_marginStart="140dp"
             android:layout_marginTop="508dp"
-            android:src="@drawable/visibility_on"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            tools:src="@drawable/avd_anim_show" />
+            tools:src="@drawable/anim_cut_the_eye" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 

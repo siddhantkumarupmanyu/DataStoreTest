@@ -1,20 +1,16 @@
 package com.example.datastore
 
-import android.graphics.drawable.Animatable2
 import android.graphics.drawable.Drawable
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources
 import androidx.fragment.app.Fragment
+import androidx.vectordrawable.graphics.drawable.Animatable2Compat
+import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.example.datastore.databinding.FragmentFirstBinding
 
-/**
- * A simple [Fragment] subclass as the default destination in the navigation.
- */
 class FirstFragment : Fragment() {
 
     private var _binding: FragmentFirstBinding? = null
@@ -38,37 +34,45 @@ class FirstFragment : Fragment() {
 
         setUpPassword()
 
+        setUpImageView()
+    }
+
+    private fun setUpImageView() {
+        binding.imageView.setImageDrawable(
+            AnimatedVectorDrawableCompat.create(
+                requireContext(),
+                R.drawable.anim_cut_the_eye
+            )!!
+        )
+
         binding.imageView.setOnClickListener(object : View.OnClickListener {
-            var passwordHidden = true
+            var isCut = false
 
-            @RequiresApi(Build.VERSION_CODES.M)
             override fun onClick(v: View?) {
+                val drawable = binding.imageView.drawable as AnimatedVectorDrawableCompat
 
-                if (passwordHidden) {
-                    binding.imageView.setImageResource(
-                        R.drawable.avd_anim_show
-                    )
-                } else {
-                    binding.imageView.setImageResource(
-                        R.drawable.avd_anim_hide
-                    )
-                }
-
-                val drawable = binding.imageView.drawable as Animatable2
-                drawable.start()
-
-                drawable.registerAnimationCallback(object : Animatable2.AnimationCallback() {
+                drawable.registerAnimationCallback(object : Animatable2Compat.AnimationCallback() {
                     override fun onAnimationEnd(drawable: Drawable?) {
                         super.onAnimationEnd(drawable)
 
-                        if (passwordHidden) {
-                            binding.imageView.setImageResource(R.drawable.visibility_off_temp)
+                        isCut = !isCut
+
+                        val avd: AnimatedVectorDrawableCompat = if (isCut) {
+                            AnimatedVectorDrawableCompat.create(
+                                requireContext(),
+                                R.drawable.anim_remove_the_cut
+                            )!!
                         } else {
-                            binding.imageView.setImageResource(R.drawable.visibility_on)
+                            AnimatedVectorDrawableCompat.create(
+                                requireContext(),
+                                R.drawable.anim_cut_the_eye
+                            )!!
                         }
-                        passwordHidden = !passwordHidden
+                        binding.imageView.setImageDrawable(avd)
                     }
                 })
+
+                drawable.start()
             }
         })
     }
