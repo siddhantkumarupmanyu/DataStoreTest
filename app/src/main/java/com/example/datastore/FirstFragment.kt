@@ -1,5 +1,6 @@
 package com.example.datastore
 
+import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.text.InputType
@@ -38,56 +39,64 @@ class FirstFragment : Fragment() {
     }
 
     private fun setUpPasswordView(imageView: ImageView, editText: EditText) {
-        imageView.setImageDrawable(
-            AnimatedVectorDrawableCompat.create(
-                requireContext(),
-                R.drawable.anim_cut_the_eye
-            )!!
-        )
+        val startingDrawable = AnimatedVectorDrawableCompat.create(
+            requireContext(),
+            R.drawable.anim_cut_the_eye
+        )!!
 
-        imageView.setOnClickListener(object : View.OnClickListener {
+        val callback = object : Animatable2Compat.AnimationCallback() {
+
             var isCut = false
 
-            override fun onClick(v: View?) {
-                val drawable = imageView.drawable as AnimatedVectorDrawableCompat
+            override fun onAnimationEnd(drawable: Drawable?) {
+                super.onAnimationEnd(drawable)
 
-                drawable.registerAnimationCallback(object : Animatable2Compat.AnimationCallback() {
-                    override fun onAnimationEnd(d: Drawable?) {
-                        super.onAnimationEnd(d)
+                // weird bug; when directly casting with as
+                if (drawable is AnimatedVectorDrawableCompat) {
+                    drawable.unregisterAnimationCallback(this)
+                }
 
-                        drawable.unregisterAnimationCallback(this)
+                isCut = !isCut
 
-                        isCut = !isCut
+                val avd: AnimatedVectorDrawableCompat
 
-                        val avd: AnimatedVectorDrawableCompat
+                if (isCut) {
+                    avd = AnimatedVectorDrawableCompat.create(
+                        requireContext(),
+                        R.drawable.anim_remove_the_cut
+                    )!!
 
-                        if (isCut) {
-                            avd = AnimatedVectorDrawableCompat.create(
-                                requireContext(),
-                                R.drawable.anim_remove_the_cut
-                            )!!
-
-                            editText.performAndRestoreCursorPosition {
-                                editText.inputType =
-                                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
-                            }
-
-                        } else {
-                            avd = AnimatedVectorDrawableCompat.create(
-                                requireContext(),
-                                R.drawable.anim_cut_the_eye
-                            )!!
-
-                            editText.performAndRestoreCursorPosition {
-                                editText.inputType =
-                                    InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
-                            }
-
-                        }
-                        imageView.setImageDrawable(avd)
+                    editText.performAndRestoreCursorPosition {
+                        editText.inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD
                     }
-                })
 
+                } else {
+                    avd = AnimatedVectorDrawableCompat.create(
+                        requireContext(),
+                        R.drawable.anim_cut_the_eye
+                    )!!
+
+                    editText.performAndRestoreCursorPosition {
+                        editText.inputType =
+                            InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_PASSWORD
+                    }
+
+                }
+
+                avd.registerAnimationCallback(this)
+                imageView.setImageDrawable(avd)
+            }
+        }
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+
+        imageView.setImageDrawable(startingDrawable)
+
+        startingDrawable.registerAnimationCallback(callback)
+
+        imageView.setOnClickListener(object : View.OnClickListener {
+            override fun onClick(v: View?) {
+                val drawable = imageView.drawable as Animatable
                 drawable.start()
             }
         })
