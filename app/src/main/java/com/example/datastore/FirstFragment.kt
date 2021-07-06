@@ -100,4 +100,7 @@ class FirstFragment : Fragment() {
 
 }
 
+// for reference
+
 // https://medium.com/@ali.muzaffar/understanding-vectordrawable-pathdata-commands-in-android-d56a6054610e
+// https://gist.github.com/nickbutcher/b1806905c6bc0ef29f545fd580935bd3
