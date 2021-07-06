@@ -1,0 +1,15 @@
+<resources>
+    <!-- Base application theme. -->
+    <style name="Theme.DataStoreTest" parent="Theme.MaterialComponents.NoActionBar">
+        <!-- Primary brand color. -->
+        <item name="colorPrimary">@color/main</item>
+
+        <item name="android:windowBackground">@android:color/white</item>
+
+
+
+<!--        <item name="android:textSelectHandle"></item>-->
+<!--        <item name="android:textSelectHandleRight"></item>-->
+<!--        <item name="android:textSelectHandleLeft"></item>-->
+    </style>
+</resources>

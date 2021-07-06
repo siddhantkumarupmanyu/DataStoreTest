@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <style name="Widget.AppCompat.EditText.InputField">
+        <item name="android:background">@drawable/react_background</item>
+        <item name="android:fontFamily">@font/roboto</item>
+        <item name="android:paddingLeft">16dp</item>
+        <item name="android:paddingTop">14dp</item>
+        <item name="android:paddingBottom">14dp</item>
+        <item name="android:textColor">@color/main</item>
+        <item name="android:textColorHighlight">@color/background_grey</item>
+        <item name="android:textColorHint">@color/hint</item>
+        <item name="android:textCursorDrawable">@drawable/text_cursor</item>
+        <item name="android:textSize">20sp</item>
+    </style>
+
+</resources>
