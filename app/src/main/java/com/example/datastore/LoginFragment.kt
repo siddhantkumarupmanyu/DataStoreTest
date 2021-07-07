@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.EditText
 import android.widget.ImageView
 import androidx.fragment.app.Fragment
+import androidx.navigation.fragment.findNavController
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.example.datastore.databinding.FragmentLoginBinding
@@ -36,6 +37,10 @@ class LoginFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         setUpPasswordView(binding.passwordImageView, binding.password)
+
+        binding.login.setOnClickListener {
+            findNavController().navigate(LoginFragmentDirections.loginSuccess())
+        }
     }
 
     private fun setUpPasswordView(imageView: ImageView, editText: EditText) {
