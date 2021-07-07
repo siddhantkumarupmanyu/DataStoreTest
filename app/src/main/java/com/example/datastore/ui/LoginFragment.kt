@@ -1,4 +1,4 @@
-package com.example.datastore
+package com.example.datastore.ui
 
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
@@ -13,8 +13,11 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
+import com.example.datastore.R
 import com.example.datastore.databinding.FragmentLoginBinding
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class LoginFragment : Fragment() {
 
     private var _binding: FragmentLoginBinding? = null
