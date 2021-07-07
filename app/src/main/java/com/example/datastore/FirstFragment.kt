@@ -51,10 +51,9 @@ class FirstFragment : Fragment() {
             override fun onAnimationEnd(drawable: Drawable?) {
                 super.onAnimationEnd(drawable)
 
-                // weird bug; when directly casting with as
-                if (drawable is AnimatedVectorDrawableCompat) {
-                    drawable.unregisterAnimationCallback(this)
-                }
+                // cast with as? as drawable is nullable
+                val t = drawable as? AnimatedVectorDrawableCompat
+                t?.unregisterAnimationCallback(this)
 
                 isCut = !isCut
 
@@ -88,18 +87,15 @@ class FirstFragment : Fragment() {
                 imageView.setImageDrawable(avd)
             }
         }
-                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
 
         imageView.setImageDrawable(startingDrawable)
 
         startingDrawable.registerAnimationCallback(callback)
 
-        imageView.setOnClickListener(object : View.OnClickListener {
-            override fun onClick(v: View?) {
-                val drawable = imageView.drawable as Animatable
-                drawable.start()
-            }
-        })
+        imageView.setOnClickListener {
+            val drawable = imageView.drawable as Animatable
+            drawable.start()
+        }
     }
 
     private fun EditText.performAndRestoreCursorPosition(operation: () -> Unit) {
