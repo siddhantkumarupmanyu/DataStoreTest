@@ -6,6 +6,7 @@
 
         <item name="android:windowBackground">@android:color/white</item>
 
+        <item name="fontFamily">@font/roboto</item>
 
 
 <!--        <item name="android:textSelectHandle"></item>-->

@@ -13,4 +13,9 @@
     <string name="password_hint">Password</string>
     <string name="login">Login</string>
     <string name="register">Register</string>
+    <string name="welcome_back">Welcome Back</string>
+
+    <string name="new_messages">You have %d new messages</string>
+    <string name="gen_new_messages">Generate New Messages</string>
+    <string name="logout">Logout</string>
 </resources>

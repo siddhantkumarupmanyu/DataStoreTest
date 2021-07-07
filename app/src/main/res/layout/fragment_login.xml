@@ -11,7 +11,7 @@
 
         <EditText
             android:id="@+id/username"
-            style="@style/Widget.AppCompat.EditText.InputFieldWithBackground"
+            style="@style/InputFieldWithBackground"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
@@ -41,7 +41,7 @@
 
             <EditText
                 android:id="@+id/password"
-                style="@style/Widget.AppCompat.EditText.InputField"
+                style="@style/InputField"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
@@ -62,17 +62,14 @@
 
         <Button
             android:id="@+id/login"
+            style="@style/CustomButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="82dp"
             android:layout_marginTop="58dp"
             android:layout_marginEnd="82dp"
-            android:background="@drawable/button_background"
-            android:stateListAnimator="@animator/button_animator"
             android:text="@string/login"
-            android:textColor="@android:color/white"
             android:textSize="22sp"
-            android:translationZ="8dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintStart_toStartOf="parent"
@@ -80,15 +77,11 @@
 
         <Button
             android:id="@+id/register"
+            style="@style/CustomButton"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="32dp"
-            android:background="@drawable/button_background"
-            android:stateListAnimator="@animator/button_animator"
             android:text="@string/register"
-            android:textColor="@android:color/white"
-            android:textSize="20sp"
-            android:translationZ="8dp"
             app:layout_constraintEnd_toEndOf="@+id/login"
             app:layout_constraintStart_toStartOf="@+id/login"
             app:layout_constraintTop_toBottomOf="@+id/view" />
