@@ -12,7 +12,7 @@
         tools:layout="@layout/fragment_login">
 
         <action
-            android:id="@+id/login_success"
+            android:id="@+id/action_login"
             app:destination="@id/HomeFragment"
             app:popUpTo="@id/LoginFragment"
             app:popUpToInclusive="true" />
@@ -24,7 +24,10 @@
         tools:layout="@layout/fragment_home">
 
         <action
-            android:id="@+id/action_SecondFragment_to_FirstFragment"
+            android:id="@+id/action_logout"
             app:destination="@id/LoginFragment" />
+        <argument
+            android:name="username"
+            app:argType="string" />
     </fragment>
 </navigation>

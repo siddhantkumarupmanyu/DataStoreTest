@@ -32,6 +32,7 @@ import java.util.concurrent.atomic.AtomicBoolean
 
 
 @RunWith(AndroidJUnit4::class)
+@Ignore("Do not want to test this in main tests")
 class DataBindingIdlingResourceTest {
 
     private val idlingResource = DataBindingIdlingResource()

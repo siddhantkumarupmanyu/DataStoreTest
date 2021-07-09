@@ -10,4 +10,8 @@ class DataStoreRepository @Inject constructor() : Repository {
     override fun register(username: String, password: String) {
         // Not yet implemented
     }
+
+    override fun generateMessages(): Int {
+        TODO("Not yet implemented")
+    }
 }

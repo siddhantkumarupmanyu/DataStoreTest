@@ -20,6 +20,6 @@
     <string name="login_error">Wrong username or password</string>
 
     <string name="new_messages">You have %d new messages</string>
-    <string name="gen_new_messages">Generate New Messages</string>
+    <string name="gen_new_messages_label">Generate New Messages</string>
     <string name="logout">Logout</string>
 </resources>

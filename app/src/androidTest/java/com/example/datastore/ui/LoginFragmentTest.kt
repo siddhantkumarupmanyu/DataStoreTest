@@ -109,13 +109,19 @@ class LoginFragmentTest {
     }
 
     @Test
-    fun navigation() {
+    @Ignore
+    fun registrationError() {
+        // TODO:
+    }
+
+    @Test
+    fun navigateToHome() {
         onView(withId(R.id.username)).perform(typeText("test"))
         onView(withId(R.id.password)).perform(typeText("test"), closeSoftKeyboard())
 
         onView(withId(R.id.login)).perform(click())
 
-        val direction = LoginFragmentDirections.loginSuccess()
+        val direction = LoginFragmentDirections.actionLogin("test")
         verify(navController).navigate(direction)
         verify(repository).login("test", "test")
     }

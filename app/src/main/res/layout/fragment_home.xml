@@ -24,18 +24,18 @@
             app:layout_constraintStart_toStartOf="parent" />
 
         <Button
-            android:id="@+id/new_message_button"
+            android:id="@+id/generate_messages"
             style="@style/CustomButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="42dp"
             android:layout_marginEnd="16dp"
-            android:text="@string/gen_new_messages"
+            android:text="@string/gen_new_messages_label"
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/new_messages" />
+            app:layout_constraintTop_toBottomOf="@+id/messages_textview" />
 
         <TextView
             android:id="@+id/welcome_back_label"
@@ -67,7 +67,7 @@
             tools:text="@string/username_hint" />
 
         <TextView
-            android:id="@+id/new_messages"
+            android:id="@+id/messages_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
