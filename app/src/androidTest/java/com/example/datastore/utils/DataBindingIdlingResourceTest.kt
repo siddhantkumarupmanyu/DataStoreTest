@@ -20,6 +20,7 @@ import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
+import org.junit.Ignore
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mockito.never
@@ -39,7 +40,7 @@ class DataBindingIdlingResourceTest {
 
     @Before
     fun setUp() {
-        scenerio = launchFragmentInContainer()
+        scenerio = launchFragmentInContainer<TestFragment>()
         idlingResource.monitorFragment(scenerio)
         IdlingRegistry.getInstance().register(idlingResource)
         Espresso.onIdle()
@@ -76,7 +77,7 @@ class DataBindingIdlingResourceTest {
 
     @Test
     fun notIdleChild() {
-        setHasPendingBindings(true)
+        setHasPendingChildBindings(true)
         assertThat(isIdle(), `is`(false))
     }
 
@@ -108,6 +109,12 @@ class DataBindingIdlingResourceTest {
     private fun setHasPendingBindings(hasPendingBindings: Boolean) {
         scenerio.onFragment { fragment ->
             fragment.fakeBinding.hasPendingBindings.set(hasPendingBindings)
+        }
+    }
+
+    private fun setHasPendingChildBindings(hasPendingBindings: Boolean) {
+        scenerio.onFragment { fragment ->
+            fragment.childFakeBinding.hasPendingBindings.set(hasPendingBindings)
         }
     }
 

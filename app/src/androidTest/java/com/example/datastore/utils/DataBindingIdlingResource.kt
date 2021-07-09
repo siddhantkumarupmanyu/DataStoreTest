@@ -11,7 +11,12 @@ import java.util.*
 
 
 /**
+ * An espresso idling resource implementation that reports idle status for all data binding
+ * layouts. Data Binding uses a mechanism to post messages which Espresso doesn't track yet.
  *
+ * Since this application runs UI tests at the fragment layer, this relies on implementations
+ * calling [monitorFragment] with a [FragmentScenario], thereby monitoring all bindings in that
+ * fragment and any child views.
  */
 class DataBindingIdlingResource : IdlingResource {
 
@@ -66,7 +71,10 @@ class DataBindingIdlingResource : IdlingResource {
             it?.view?.getBindings()
         } ?: emptyList()
 
-        return bindings
+        val childrenBindings = fragments?.flatMap { it.childFragmentManager.fragments }
+            ?.mapNotNull { it.view?.getBindings() } ?: emptyList()
+
+        return bindings + childrenBindings
     }
 }
 
@@ -74,6 +82,10 @@ fun <T : Fragment> DataBindingIdlingResource.monitorFragment(fragmentScenario: F
     fragmentScenario.onFragment {
         this.activity = it.requireActivity()
     }
+}
+
+fun <T : Fragment> DataBindingIdlingResource.monitorFragment(fragment: T) {
+    this.activity = fragment.requireActivity()
 }
 
 private fun View.getBindings(): ViewDataBinding? = DataBindingUtil.getBinding(this)

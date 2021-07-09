@@ -8,3 +8,7 @@
         </shape>
     </item>
 </ripple>
+
+
+<!-- https://github.com/blipinsk/til/blob/master/android-ui/gradient-drawables-with-aapt.md -->
+<!-- Applying transparency to colors using aapt2 is a bit convoluted because you actually need to use a selector for that -->

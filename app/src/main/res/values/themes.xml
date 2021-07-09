@@ -8,9 +8,24 @@
 
         <item name="fontFamily">@font/roboto</item>
 
+        <item name="snackbarStyle">@style/Widget.App.Snackbar</item>
+        <item name="snackbarTextViewStyle">@style/Widget.App.SnackbarTextView</item>
 
-<!--        <item name="android:textSelectHandle"></item>-->
-<!--        <item name="android:textSelectHandleRight"></item>-->
-<!--        <item name="android:textSelectHandleLeft"></item>-->
+        <!--        <item name="android:textSelectHandle"></item>-->
+        <!--        <item name="android:textSelectHandleRight"></item>-->
+        <!--        <item name="android:textSelectHandleLeft"></item>-->
     </style>
+
+    <style name="Widget.App.Snackbar" parent="Widget.MaterialComponents.Snackbar">
+        <item name="animationMode">slide</item>
+        <item name="backgroundTint">@color/main</item>
+    </style>
+
+    <style name="Widget.App.SnackbarTextView" parent="Widget.MaterialComponents.Snackbar.TextView">
+        <item name="android:textColor">@android:color/white</item>
+        <item name="android:textSize">16sp</item>
+        <item name="fontFamily">@font/roboto</item>
+    </style>
+
+
 </resources>

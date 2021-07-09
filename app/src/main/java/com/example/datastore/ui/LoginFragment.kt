@@ -1,5 +1,6 @@
 package com.example.datastore.ui
 
+import android.graphics.Typeface
 import android.graphics.drawable.Animatable
 import android.graphics.drawable.Drawable
 import android.os.Bundle
@@ -7,14 +8,18 @@ import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.ImageView
+import androidx.core.content.res.ResourcesCompat.getColor
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.navigation.fragment.findNavController
 import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.example.datastore.R
 import com.example.datastore.databinding.FragmentLoginBinding
+import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -25,6 +30,8 @@ class LoginFragment : Fragment() {
     // This property is only valid between onCreateView and
     // onDestroyView.
     private val binding get() = _binding!!
+
+    private val loginViewModel by viewModels<LoginViewModel>()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -41,12 +48,42 @@ class LoginFragment : Fragment() {
 
         setUpPasswordView(binding.passwordImageView, binding.password)
 
+        loginViewModel.loginResult.observe(viewLifecycleOwner) {
+            if (it) {
+                findNavController().navigate(LoginFragmentDirections.loginSuccess())
+            } else {
+                binding.login.startAnimation(
+                    AnimationUtils.loadAnimation(
+                        binding.login.context,
+                        R.anim.shake
+                    )
+                )
+                Snackbar.make(binding.root, R.string.login_error, Snackbar.LENGTH_SHORT)
+                    .setBackgroundTint(getColor(resources, R.color.error_red, null))
+                    .show()
+            }
+        }
+
         binding.login.setOnClickListener {
-            findNavController().navigate(LoginFragmentDirections.loginSuccess())
+            loginViewModel.login(binding.username.text.toString(), binding.password.text.toString())
+        }
+
+        binding.register.setOnClickListener {
+            loginViewModel.register(
+                binding.username.text.toString(),
+                binding.password.text.toString()
+            )
+
+            Snackbar.make(binding.root, R.string.registration_success, Snackbar.LENGTH_SHORT)
+                .show()
         }
     }
 
     private fun setUpPasswordView(imageView: ImageView, editText: EditText) {
+
+        // IDK why its not setting it via xml
+        editText.typeface = Typeface.MONOSPACE
+
         val startingDrawable = AnimatedVectorDrawableCompat.create(
             requireContext(),
             R.drawable.anim_cut_the_eye
