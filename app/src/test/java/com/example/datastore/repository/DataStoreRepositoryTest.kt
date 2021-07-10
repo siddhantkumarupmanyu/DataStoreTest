@@ -3,8 +3,8 @@ package com.example.datastore.repository
 import com.example.datastore.datastore.DataStoreHelper
 import com.example.datastore.utils.mock
 import com.example.datastore.vo.ProtoBuffUser
-import com.example.datastore.vo.Result
 import com.example.datastore.vo.StandardUser
+import com.example.datastore.vo.User
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.`is`
@@ -36,7 +36,7 @@ class DataStoreRepositoryTest {
         `when`(dataStoreHelper.users).thenReturn(flowOf(listOf(user)))
         val isValid = repository.login("test", "test")
 
-        assertThat(isValid, `is`(Result.Success(user)))
+        assertThat(isValid, `is`(user))
     }
 
     @Test
@@ -46,7 +46,7 @@ class DataStoreRepositoryTest {
 
         val isValid = repository.login("test", "test")
 
-        assertThat(isValid, `is`(Result.Success(user)))
+        assertThat(isValid, `is`(user))
     }
 
     @Test
@@ -56,7 +56,7 @@ class DataStoreRepositoryTest {
 
         val isValid = repository.login("admin", "admin")
 
-        assertThat(isValid, `is`(Result.Failure("User not Found")))
+        assertThat(isValid, `is`(User.NO_USER))
     }
 
     @Test

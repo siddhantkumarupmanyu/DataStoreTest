@@ -1,7 +1,6 @@
 package com.example.datastore.repository
 
 import com.example.datastore.datastore.DataStoreHelper
-import com.example.datastore.vo.Result
 import com.example.datastore.vo.StandardUser
 import com.example.datastore.vo.User
 import kotlinx.coroutines.coroutineScope
@@ -32,17 +31,17 @@ class DataStoreRepository(
     }
 
 
-    override suspend fun login(username: String, password: String): Result<User> {
+    override suspend fun login(username: String, password: String): User {
         if (!::users.isInitialized) {
             initUsers()
         }
 
         for (user in users) {
             if ((user.username == username) && (user.password == password)) {
-                return Result.Success(user)
+                return user
             }
         }
-        return Result.Failure("User not Found")
+        return User.NO_USER
     }
 
     override fun getUserDetails(user: User): Flow<User> {

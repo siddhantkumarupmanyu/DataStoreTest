@@ -10,7 +10,6 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 
 @ExperimentalCoroutinesApi
@@ -33,8 +32,16 @@ class LoginViewModelTest {
     }
 
     @Test
-    fun login() = runBlocking{
-        // TODO:
+    fun register() = runBlocking {
+        viewModel.register("admin", "admin")
+        viewModel.register("test", "test")
+
+        verify(repository).register("admin", "admin")
+        verify(repository).register("test", "test")
+    }
+
+    @Test
+    fun login(): Unit = runBlocking {
         // `when`(repository.login("admin", "admin")).thenReturn(false)
         // `when`(repository.login("valid", "valid")).thenReturn(true)
 
@@ -48,15 +55,6 @@ class LoginViewModelTest {
         verify(observer).onChanged(true)
         verify(repository).login("admin", "admin")
         verify(repository).login("valid", "valid")
-    }
-
-    @Test
-    fun register() = runBlocking{
-        viewModel.register("admin", "admin")
-        viewModel.register("test", "test")
-
-        verify(repository).register("admin", "admin")
-        verify(repository).register("test", "test")
     }
 
 }

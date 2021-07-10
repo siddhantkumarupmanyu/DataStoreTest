@@ -9,6 +9,21 @@ interface User {
         newPassword: String,
         newMessage: Int
     ): User
+
+    companion object {
+        val NO_USER = object : User {
+            override val username: String
+                get() = ""
+            override val password: String
+                get() = ""
+            override val message: Int
+                get() = -1
+
+            override fun updateUser(newPassword: String, newMessage: Int): User {
+                return this
+            }
+        }
+    }
 }
 
 data class StandardUser(
