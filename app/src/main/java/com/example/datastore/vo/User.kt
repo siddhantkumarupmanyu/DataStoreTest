@@ -1,6 +1,9 @@
 package com.example.datastore.vo
 
-interface User {
+import android.os.Parcel
+import android.os.Parcelable
+
+interface User : Parcelable {
     val username: String
     val password: String
     val message: Int
@@ -22,27 +25,23 @@ interface User {
             override fun updateUser(newPassword: String, newMessage: Int): User {
                 return this
             }
+
+            override fun describeContents(): Int {
+                // if someone calls this method
+                // then it is a programmatic error
+                // no one should call this method
+                // also IDK which other exception should I throw here
+                throw NotImplementedError()
+            }
+
+            override fun writeToParcel(dest: Parcel?, flags: Int) {
+                // if someone calls this method
+                // then it is a programmatic error
+                // no one should call this method
+                // also IDK which other exception should I throw here
+                throw NotImplementedError()
+            }
         }
     }
 }
 
-data class StandardUser(
-    override val username: String,
-    override val password: String,
-    override val message: Int
-) : User {
-    override fun updateUser(newPassword: String, newMessage: Int): User {
-        return this.copy(password = newPassword, message = newMessage)
-    }
-}
-
-data class ProtoBuffUser(
-    override val username: String,
-    override val password: String,
-    override val message: Int,
-    val index: Int
-) : User {
-    override fun updateUser(newPassword: String, newMessage: Int): User {
-        return this.copy(password = newPassword, message = newMessage)
-    }
-}

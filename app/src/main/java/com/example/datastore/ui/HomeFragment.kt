@@ -40,18 +40,22 @@ class HomeFragment : Fragment() {
 
         binding.lifecycleOwner = viewLifecycleOwner
 
-        binding.homeUsername.text = args.username
+        binding.homeUsername.text = args.user.username
 
-        // homeViewModel.messages.observe(viewLifecycleOwner) {
-        //     binding.messagesTextview.text = getString(R.string.new_messages).format(it)
-        // }
+        homeViewModel.initUser(args.user)
 
         binding.generateMessages.setOnClickListener {
-            // homeViewModel.generateMessages()
+            homeViewModel.generateMessages()
         }
 
         binding.logout.setOnClickListener {
             findNavController().navigate(HomeFragmentDirections.actionLogout())
+        }
+
+        homeViewModel.user.observe(viewLifecycleOwner) { user ->
+            if (user != null) {
+                binding.messagesTextview.text = getString(R.string.new_messages, user.message)
+            }
         }
 
     }

@@ -12,15 +12,18 @@ import com.example.datastore.R
 import com.example.datastore.di.RepositoryModule
 import com.example.datastore.repository.Repository
 import com.example.datastore.utils.*
+import com.example.datastore.vo.StandardUser
+import com.example.datastore.vo.User
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.verify
 
 
 @RunWith(AndroidJUnit4::class)
@@ -44,7 +47,29 @@ class HomeFragmentTest {
     var hiltRule = HiltAndroidRule(this)
 
     @BindValue
-    val repository = mock<Repository>()
+    val repository = object : Repository {
+
+        private val initialUser = StandardUser("test", "test", 2)
+
+        private val flow = MutableStateFlow(initialUser)
+
+        override suspend fun login(username: String, password: String): User {
+            TODO("Not yet implemented")
+        }
+
+        override suspend fun register(username: String, password: String) {
+            TODO("Not yet implemented")
+        }
+
+        override fun getUserDetails(user: User): Flow<User> {
+            return flow
+        }
+
+        override suspend fun generateMessage(user: User) {
+            flow.emit(initialUser.copy(message = 5))
+        }
+
+    }
 
     private val navController = mock<NavController>()
 
@@ -52,10 +77,8 @@ class HomeFragmentTest {
     fun init() {
         hiltRule.inject()
 
-        // TODO:
-        // `when`(repository.generateMessages()).thenReturn(5)
-
-        val argsBundle = HomeFragmentArgs("test").toBundle()
+        val user = StandardUser("test", "test", 2)
+        val argsBundle = HomeFragmentArgs(user).toBundle()
 
         launchInHiltContainer<HomeFragment>(fragmentArgs = argsBundle) {
             dataBindingIdlingResourceRule.monitorFragment(this)
@@ -73,17 +96,20 @@ class HomeFragmentTest {
         onView(withId(R.id.generate_messages)).perform(click())
 
         onView(withId(R.id.messages_textview)).check(matches(withText("You have 5 new messages")))
-
-        // TODO:
-        // verify(repository).generateMessage()
     }
 
-    @Test
-    fun logout_NavigateToLogin() {
-        onView(withId(R.id.logout)).perform(click())
-
-        val directions = HomeFragmentDirections.actionLogout()
-        verify(navController).navigate(directions)
-    }
+    // TODO:
+    // @Test
+    // fun decreaseMessageCount(){
+    //
+    // }
+    //
+    // @Test
+    // fun logout_NavigateToLogin() {
+    //     onView(withId(R.id.logout)).perform(click())
+    //
+    //     val directions = HomeFragmentDirections.actionLogout()
+    //     verify(navController).navigate(directions)
+    // }
 
 }

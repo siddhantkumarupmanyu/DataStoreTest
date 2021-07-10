@@ -19,7 +19,7 @@
     <string name="registration_success">Registration Success</string>
     <string name="login_error">Wrong username or password</string>
 
-    <string name="new_messages">You have %d new messages</string>
+    <string name="new_messages">You have %1$d new messages</string>
     <string name="gen_new_messages_label">Generate New Messages</string>
     <string name="logout">Logout</string>
 </resources>

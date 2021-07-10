@@ -118,7 +118,7 @@ class LoginFragmentTest {
 
         onView(withId(R.id.login)).perform(click())
 
-        val direction = LoginFragmentDirections.actionLogin("test")
+        val direction = LoginFragmentDirections.actionLogin(validUser)
         verify(navController).navigate(direction)
         verify(repository).login("test", "test")
     }

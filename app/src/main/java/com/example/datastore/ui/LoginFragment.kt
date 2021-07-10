@@ -51,7 +51,7 @@ class LoginFragment : Fragment() {
 
         loginViewModel.loginResult.observe(viewLifecycleOwner) {
             if (it != User.NO_USER) {
-                findNavController().navigate(LoginFragmentDirections.actionLogin(binding.username.text.toString()))
+                findNavController().navigate(LoginFragmentDirections.actionLogin(it))
             } else {
                 binding.login.startAnimation(
                     AnimationUtils.loadAnimation(
