@@ -7,6 +7,7 @@ import androidx.datastore.dataStoreFile
 import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.datastore.UsersPreferences
+import com.example.datastore.vo.StandardUser
 import com.example.datastore.vo.User
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.toList
@@ -31,8 +32,8 @@ class ProtoBuffHelperTest {
 
     private lateinit var helper: ProtoBuffHelper
 
-    // Why am testing it on android if i can test it on local jvm.
     // TODO:
+    // Why am testing it on android if i can test it on local jvm.
 
     @Before
     fun setup() {
@@ -56,9 +57,11 @@ class ProtoBuffHelperTest {
         println("done")
     }
 
+    // TODO: return a ProtoBuffUser instead of Standard User
+
     @Test
     fun addAndGetUser() = runBlocking {
-        val user = User("test", "pass", 2)
+        val user = StandardUser("test", "pass", 2)
 
         val users = mutableListOf<List<User>>()
 
@@ -101,7 +104,7 @@ class ProtoBuffHelperTest {
 
         assertThat(users, `is`(listOf(emptyList())))
 
-        val user = User("test", "pass", 2)
+        val user = StandardUser("test", "pass", 2)
         helper.addUser(user)
 
         // delay so that new values from collect are added to list,

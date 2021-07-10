@@ -18,6 +18,7 @@ class HomeViewModel @Inject constructor(
     val messages: LiveData<Int> = _messages
 
     fun generateMessages() {
-        _messages.value = repository.generateMessages()
+        // TODo:
+        // _messages.value = repository.generateMessages()
     }
 }

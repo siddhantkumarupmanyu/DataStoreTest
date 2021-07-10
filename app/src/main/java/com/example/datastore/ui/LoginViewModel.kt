@@ -25,7 +25,8 @@ class LoginViewModel @Inject constructor(
     fun login(username: String, password: String) {
         viewModelScope.launch {
             val result = repository.login(username, password)
-            _loginResult.value = result
+            // TODO:
+            // _loginResult.value = result
         }
     }
 

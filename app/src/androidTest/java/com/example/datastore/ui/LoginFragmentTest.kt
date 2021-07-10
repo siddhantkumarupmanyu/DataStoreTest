@@ -15,6 +15,7 @@ import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Ignore
 import org.junit.Rule
@@ -49,11 +50,12 @@ class LoginFragmentTest {
     private val navController = mock<NavController>()
 
     @Before
-    fun init() {
+    suspend fun init() {
         hiltRule.inject()
 
-        `when`(repository.login("test", "test")).thenReturn(true)
-        `when`(repository.login("admin", "admin")).thenReturn(false)
+        // TODO:
+        // `when`(repository.login("test", "test")).thenReturn(true)
+        // `when`(repository.login("admin", "admin")).thenReturn(false)
 
         launchInHiltContainer<LoginFragment> {
             dataBindingIdlingResourceRule.monitorFragment(this)
@@ -62,7 +64,7 @@ class LoginFragmentTest {
     }
 
     @Test
-    fun login() {
+    fun login() = runBlocking {
         onView(withId(R.id.username)).perform(typeText("test"))
         onView(withId(R.id.password)).perform(typeText("test"), closeSoftKeyboard())
 
@@ -72,7 +74,7 @@ class LoginFragmentTest {
     }
 
     @Test
-    fun register() {
+    fun register() = runBlocking {
         onView(withId(R.id.username)).perform(typeText("test"))
         onView(withId(R.id.password)).perform(typeText("test"), closeSoftKeyboard())
 
@@ -91,7 +93,7 @@ class LoginFragmentTest {
 
 
     @Test
-    fun loginError() {
+    fun loginError(): Unit = runBlocking{
         onView(withId(R.id.username)).perform(typeText("admin"))
         onView(withId(R.id.password)).perform(typeText("admin"), closeSoftKeyboard())
 
@@ -115,7 +117,7 @@ class LoginFragmentTest {
     }
 
     @Test
-    fun navigateToHome() {
+    fun navigateToHome(): Unit = runBlocking {
         onView(withId(R.id.username)).perform(typeText("test"))
         onView(withId(R.id.password)).perform(typeText("test"), closeSoftKeyboard())
 

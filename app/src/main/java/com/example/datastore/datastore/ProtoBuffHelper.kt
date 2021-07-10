@@ -6,10 +6,12 @@ import androidx.datastore.core.DataStore
 import androidx.datastore.dataStore
 import com.example.datastore.PrefUser
 import com.example.datastore.UsersPreferences
+import com.example.datastore.vo.StandardUser
 import com.example.datastore.vo.User
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
 import java.io.IOException
+import javax.inject.Inject
 
 
 private val TAG = "ProtoBuffHelper"
@@ -22,9 +24,11 @@ val Context.userPreferencesStore: DataStore<UsersPreferences> by dataStore(
     serializer = UsersPreferenceSerializer
 )
 
-class ProtoBuffHelper(private val dataStore: DataStore<UsersPreferences>) : DataStoreHelper {
+class ProtoBuffHelper @Inject constructor(
+    private val dataStore: DataStore<UsersPreferences>
+) : DataStoreHelper {
 
-    val users = dataStore.data
+    override val users = dataStore.data
         .catch { exception ->
             if (dataStore is IOException) {
                 Log.e(TAG, "Error reading user_prefs.pb", exception)
@@ -34,7 +38,7 @@ class ProtoBuffHelper(private val dataStore: DataStore<UsersPreferences>) : Data
             }
         }.map { userPreferences ->
             userPreferences.usersList.map { prefUser ->
-                User(prefUser.username, prefUser.password, prefUser.messages)
+                StandardUser(prefUser.username, prefUser.password, prefUser.messages)
             }
         }
 
