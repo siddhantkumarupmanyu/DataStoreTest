@@ -9,7 +9,7 @@ import com.example.datastore.datastore.DATA_STORE_FILE_NAME
 import com.example.datastore.datastore.DataStoreHelper
 import com.example.datastore.datastore.ProtoBuffHelper
 import com.example.datastore.datastore.UsersPreferenceSerializer
-import com.example.datastore.repository.ProtoBuffRepository
+import com.example.datastore.repository.DataStoreRepository
 import com.example.datastore.repository.Repository
 import dagger.Binds
 import dagger.Module
@@ -25,7 +25,7 @@ import javax.inject.Singleton
 interface RepositoryModule {
     @Singleton
     @Binds
-    fun provideRepository(protoBuffRepository: ProtoBuffRepository): Repository
+    fun provideRepository(dataStoreRepository: DataStoreRepository): Repository
 }
 
 @InstallIn(SingletonComponent::class)

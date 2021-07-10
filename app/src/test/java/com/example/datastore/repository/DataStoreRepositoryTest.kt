@@ -5,32 +5,21 @@ import com.example.datastore.utils.mock
 import com.example.datastore.vo.ProtoBuffUser
 import com.example.datastore.vo.Result
 import com.example.datastore.vo.StandardUser
-import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.`is`
-import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
-import org.junit.Before
 import org.junit.Test
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 
 private const val randomNumber = 4
 
-class ProtoBuffRepositoryTest {
+class DataStoreRepositoryTest {
 
     private val dataStoreHelper = mock<DataStoreHelper>()
 
-    private val repository = ProtoBuffRepository(dataStoreHelper) { randomNumber }
-
-    @Before
-    fun setup() {
-        val user = StandardUser("test", "test", 2)
-
-        `when`(dataStoreHelper.users).thenReturn(flowOf(listOf(user)))
-    }
+    private val repository = DataStoreRepository(dataStoreHelper) { randomNumber }
 
     @Test
     fun registerUser() = runBlocking {
@@ -42,35 +31,46 @@ class ProtoBuffRepositoryTest {
     }
 
     @Test
-    fun loginValid() = runBlocking {
+    fun loginValidStandardUser() = runBlocking {
+        val user = StandardUser("test", "test", 2)
+        `when`(dataStoreHelper.users).thenReturn(flowOf(listOf(user)))
         val isValid = repository.login("test", "test")
 
-        assertThat(isValid, `is`(Result.Success(ProtoBuffUser("test", "test", 2, 0))))
+        assertThat(isValid, `is`(Result.Success(user)))
+    }
+
+    @Test
+    fun loginValidProtoBuffUser() = runBlocking {
+        val user = ProtoBuffUser("test", "test", 2, 0)
+        `when`(dataStoreHelper.users).thenReturn(flowOf(listOf(user)))
+
+        val isValid = repository.login("test", "test")
+
+        assertThat(isValid, `is`(Result.Success(user)))
     }
 
     @Test
     fun loginInvalid() = runBlocking {
+        val user = StandardUser("test", "test", 2)
+        `when`(dataStoreHelper.users).thenReturn(flowOf(listOf(user)))
+
         val isValid = repository.login("admin", "admin")
 
         assertThat(isValid, `is`(Result.Failure("User not Found")))
     }
 
-    @ExperimentalCoroutinesApi
     @Test
-    fun getUserDetails() = runBlocking {
-        val user = ProtoBuffUser("test", "test", -1, 0)
+    fun getUserDetails(): Unit = runBlocking {
+        val user = StandardUser("test", "test", 2)
 
-        val expected = ProtoBuffUser("test", "test", 2, 0)
+        repository.getUserDetails(user)
 
-        val actual = repository.getUserDetails(user).first()
-
-        assertThat(actual, `is`(equalTo(expected)))
+        verify(dataStoreHelper).getSingleUser(user)
     }
 
-    @ExperimentalCoroutinesApi
     @Test
     fun generateMessage() = runBlocking {
-        val user = ProtoBuffUser("test", "test", -1, 0)
+        val user = StandardUser("test", "test", 5)
 
         repository.generateMessage(user)
 
