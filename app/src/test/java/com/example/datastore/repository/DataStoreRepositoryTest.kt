@@ -5,6 +5,8 @@ import com.example.datastore.utils.mock
 import com.example.datastore.vo.ProtoBuffUser
 import com.example.datastore.vo.StandardUser
 import com.example.datastore.vo.User
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOf
 import kotlinx.coroutines.runBlocking
 import org.hamcrest.CoreMatchers.`is`
@@ -33,7 +35,13 @@ class DataStoreRepositoryTest {
     @Test
     fun loginValidStandardUser() = runBlocking {
         val user = StandardUser("test", "test", 2)
-        `when`(dataStoreHelper.users).thenReturn(flowOf(listOf(user)))
+
+        val flow = flow {
+            delay(20)
+            emit(listOf(user))
+        }
+
+        `when`(dataStoreHelper.users).thenReturn(flow)
         val isValid = repository.login("test", "test")
 
         assertThat(isValid, `is`(user))
