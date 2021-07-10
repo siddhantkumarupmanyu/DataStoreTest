@@ -7,8 +7,10 @@ import com.example.datastore.vo.ProtoBuffUser
 import com.example.datastore.vo.StandardUser
 import com.example.datastore.vo.User
 import kotlinx.coroutines.*
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.toList
 import org.hamcrest.CoreMatchers.`is`
+import org.hamcrest.CoreMatchers.equalTo
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.After
 import org.junit.Before
@@ -114,6 +116,34 @@ class ProtoBuffHelperTest {
 
         helper.updateUser(userUpdated)
         assertWithDelay(users, listOf(emptyList(), listOf(userProtoBuff), listOf(userUpdated)))
+
+        job.cancel()
+    }
+
+    @Test
+    fun singleUser_WhenUserIsProtoBuffUser() = runBlocking {
+        val standardUser = StandardUser("username", "password", 2)
+        helper.addUser(standardUser)
+
+        var user = ProtoBuffUser("", "", -1, -1)
+
+        val job = launch {
+            withContext(Dispatchers.IO) {
+                helper.getSingleUser(user.copy(index = 0)).collect {
+                    user = it
+                }
+            }
+        }
+
+        delay(50)
+
+        assertThat(user, `is`(equalTo(ProtoBuffUser("username", "password", 2, 0))))
+
+        val updatedUser = ProtoBuffUser("username", "password", 5, 0)
+        helper.updateUser(updatedUser)
+
+        delay(10)
+        assertThat(user, `is`(equalTo(updatedUser)))
 
         job.cancel()
     }

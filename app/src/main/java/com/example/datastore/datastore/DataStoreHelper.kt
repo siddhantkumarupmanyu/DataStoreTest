@@ -8,4 +8,6 @@ interface DataStoreHelper {
 
     suspend fun addUser(user: User)
     suspend fun updateUser(user: User)
+
+    fun getSingleUser(user: User): Flow<User>
 }

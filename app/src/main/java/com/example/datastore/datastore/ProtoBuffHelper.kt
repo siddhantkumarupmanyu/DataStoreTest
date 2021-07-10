@@ -6,8 +6,10 @@ import com.example.datastore.PrefUser
 import com.example.datastore.UsersPreferences
 import com.example.datastore.vo.ProtoBuffUser
 import com.example.datastore.vo.User
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
+import kotlinx.coroutines.flow.transform
 import java.io.IOException
 import javax.inject.Inject
 
@@ -64,6 +66,16 @@ class ProtoBuffHelper @Inject constructor(
                 .build()
 
             userPreferences.toBuilder().setUsers(user.index, updatedUser).build()
+        }
+    }
+
+    override fun getSingleUser(user: User): Flow<ProtoBuffUser> {
+        // should I make user flexible or force it to be ProtoBuffUser -> forcing for now
+
+        require(user is ProtoBuffUser)
+
+        return users.transform { list ->
+            emit(list[user.index])
         }
     }
 
