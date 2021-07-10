@@ -19,6 +19,7 @@ import androidx.vectordrawable.graphics.drawable.Animatable2Compat
 import androidx.vectordrawable.graphics.drawable.AnimatedVectorDrawableCompat
 import com.example.datastore.R
 import com.example.datastore.databinding.FragmentLoginBinding
+import com.example.datastore.vo.User
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -49,7 +50,7 @@ class LoginFragment : Fragment() {
         setUpPasswordView(binding.passwordImageView, binding.password)
 
         loginViewModel.loginResult.observe(viewLifecycleOwner) {
-            if (it) {
+            if (it != User.NO_USER) {
                 findNavController().navigate(LoginFragmentDirections.actionLogin(binding.username.text.toString()))
             } else {
                 binding.login.startAnimation(
