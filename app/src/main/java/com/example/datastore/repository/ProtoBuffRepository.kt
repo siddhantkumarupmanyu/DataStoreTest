@@ -23,9 +23,9 @@ class ProtoBuffRepository(
         Random.nextInt()
     })
 
-    private var users: MutableList<ProtoBuffUser> = mutableListOf()
+    private lateinit var users: MutableList<ProtoBuffUser>
 
-    override suspend fun initUsers() {
+    private suspend fun initUsers() {
         coroutineScope {
             dataStoreHelper.users
                 .collectLatest {
@@ -42,6 +42,10 @@ class ProtoBuffRepository(
 
 
     override suspend fun login(username: String, password: String): Result<User> {
+        if (!::users.isInitialized) {
+            initUsers()
+        }
+
         for (user in users) {
             if ((user.username == username) && (user.password == password)) {
                 return Result.Success(user)

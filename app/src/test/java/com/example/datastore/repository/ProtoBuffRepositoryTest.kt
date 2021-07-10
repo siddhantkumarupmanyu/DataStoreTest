@@ -43,8 +43,6 @@ class ProtoBuffRepositoryTest {
 
     @Test
     fun loginValid() = runBlocking {
-        repository.initUsers()
-
         val isValid = repository.login("test", "test")
 
         assertThat(isValid, `is`(Result.Success(ProtoBuffUser("test", "test", 2, 0))))
@@ -52,8 +50,6 @@ class ProtoBuffRepositoryTest {
 
     @Test
     fun loginInvalid() = runBlocking {
-        repository.initUsers()
-
         val isValid = repository.login("admin", "admin")
 
         assertThat(isValid, `is`(Result.Failure("User not Found")))

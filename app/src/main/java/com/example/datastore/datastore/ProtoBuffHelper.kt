@@ -1,9 +1,7 @@
 package com.example.datastore.datastore
 
-import android.content.Context
 import android.util.Log
 import androidx.datastore.core.DataStore
-import androidx.datastore.dataStore
 import com.example.datastore.PrefUser
 import com.example.datastore.UsersPreferences
 import com.example.datastore.vo.StandardUser
@@ -19,10 +17,10 @@ private val TAG = "ProtoBuffHelper"
 const val DATA_STORE_FILE_NAME = "user_prefs.pb"
 
 
-val Context.userPreferencesStore: DataStore<UsersPreferences> by dataStore(
-    fileName = DATA_STORE_FILE_NAME,
-    serializer = UsersPreferenceSerializer
-)
+// val Context.userPreferencesStore: DataStore<UsersPreferences> by dataStore(
+//     fileName = DATA_STORE_FILE_NAME,
+//     serializer = UsersPreferenceSerializer
+// )
 
 class ProtoBuffHelper @Inject constructor(
     private val dataStore: DataStore<UsersPreferences>
