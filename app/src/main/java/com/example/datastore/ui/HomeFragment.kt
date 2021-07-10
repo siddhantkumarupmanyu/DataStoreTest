@@ -42,12 +42,12 @@ class HomeFragment : Fragment() {
 
         binding.homeUsername.text = args.username
 
-        homeViewModel.messages.observe(viewLifecycleOwner) {
-            binding.messagesTextview.text = getString(R.string.new_messages).format(it)
-        }
+        // homeViewModel.messages.observe(viewLifecycleOwner) {
+        //     binding.messagesTextview.text = getString(R.string.new_messages).format(it)
+        // }
 
         binding.generateMessages.setOnClickListener {
-            homeViewModel.generateMessages()
+            // homeViewModel.generateMessages()
         }
 
         binding.logout.setOnClickListener {
