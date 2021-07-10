@@ -3,6 +3,7 @@ package com.example.datastore.datastore
 import androidx.datastore.core.DataStore
 import androidx.datastore.core.DataStoreFactory
 import com.example.datastore.UsersPreferences
+import com.example.datastore.vo.ProtoBuffUser
 import com.example.datastore.vo.StandardUser
 import com.example.datastore.vo.User
 import kotlinx.coroutines.*
@@ -49,11 +50,10 @@ class ProtoBuffHelperTest {
         // File(applicationContext.filesDir, "datastore").deleteRecursively()
     }
 
-    // TODO: return a ProtoBuffUser instead of Standard User
-
     @Test
     fun addAndGetUser() = runBlocking {
         val user = StandardUser("test", "pass", 2)
+        val userProtoBuff = ProtoBuffUser("test", "pass", 2, 0)
 
         val users = mutableListOf<List<User>>()
 
@@ -73,12 +73,16 @@ class ProtoBuffHelperTest {
 
         // delay so that new values from collect are added to list,
         // collect/toList is running in a coroutine which runs another coroutine but with io dispatcher (another thread)
-        assertWithDelay(users, listOf(emptyList(), listOf(user)))
+        assertWithDelay(users, listOf(emptyList(), listOf(userProtoBuff)))
 
-        val user2 = user.copy("user2", "pass2", 5)
+        val user2 = StandardUser("user2", "pass2", 5)
+        val user2ProtoBuff = ProtoBuffUser("user2", "pass2", 5, 1)
 
         helper.addUser(user2)
-        assertWithDelay(users, listOf(emptyList(), listOf(user), listOf(user, user2)))
+        assertWithDelay(
+            users,
+            listOf(emptyList(), listOf(userProtoBuff), listOf(userProtoBuff, user2ProtoBuff))
+        )
 
         job.cancel()
     }
@@ -99,16 +103,52 @@ class ProtoBuffHelperTest {
         // assertThat(users, `is`(listOf(emptyList())))
 
         val user = StandardUser("test", "pass", 2)
+        val userProtoBuff = ProtoBuffUser("test", "pass", 2, 0)
         helper.addUser(user)
 
         // delay so that new values from collect are added to list,
         // collect/toList is running in a coroutine which runs another coroutine but with io dispatcher (another thread)
-        assertWithDelay(users, listOf(emptyList(), listOf(user)))
+        assertWithDelay(users, listOf(emptyList(), listOf(userProtoBuff)))
 
-        val userUpdated = user.copy("test", "passUpdate", 5)
+        val userUpdated = ProtoBuffUser("test", "pass", 5, 0)
 
         helper.updateUser(userUpdated)
-        assertWithDelay(users, listOf(emptyList(), listOf(user), listOf(userUpdated)))
+        assertWithDelay(users, listOf(emptyList(), listOf(userProtoBuff), listOf(userUpdated)))
+
+        job.cancel()
+    }
+
+    @Test
+    fun updateStandardUser() = runBlocking {
+        val users = mutableListOf<List<User>>()
+
+        val job = launch {
+            withContext(Dispatchers.IO) {
+                helper.users.toList(users)
+            }
+        }
+        // delay so that above coroutine is setUp
+        delay(50)
+
+        // this makes the test flaky
+        // assertThat(users, `is`(listOf(emptyList())))
+
+        val user = StandardUser("test", "pass", 2)
+        val userProtoBuff = ProtoBuffUser("test", "pass", 2, 0)
+        helper.addUser(user)
+
+        // delay so that new values from collect are added to list,
+        // collect/toList is running in a coroutine which runs another coroutine but with io dispatcher (another thread)
+        assertWithDelay(users, listOf(emptyList(), listOf(userProtoBuff)))
+
+        val userUpdated = user.copy(password = "passUpdate", message = 5)
+        val userUpdatedProtoBuff = userProtoBuff.copy(password = "passUpdate", message = 5)
+
+        helper.updateStandardUser(userUpdated)
+        assertWithDelay(
+            users,
+            listOf(emptyList(), listOf(userProtoBuff), listOf(userUpdatedProtoBuff))
+        )
 
         job.cancel()
     }

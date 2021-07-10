@@ -4,7 +4,7 @@ import android.util.Log
 import androidx.datastore.core.DataStore
 import com.example.datastore.PrefUser
 import com.example.datastore.UsersPreferences
-import com.example.datastore.vo.StandardUser
+import com.example.datastore.vo.ProtoBuffUser
 import com.example.datastore.vo.User
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.map
@@ -35,8 +35,8 @@ class ProtoBuffHelper @Inject constructor(
                 throw exception
             }
         }.map { userPreferences ->
-            userPreferences.usersList.map { prefUser ->
-                StandardUser(prefUser.username, prefUser.password, prefUser.messages)
+            userPreferences.usersList.mapIndexed() { index, prefUser ->
+                ProtoBuffUser(prefUser.username, prefUser.password, prefUser.messages, index)
             }
         }
 
@@ -54,6 +54,21 @@ class ProtoBuffHelper @Inject constructor(
     }
 
     override suspend fun updateUser(user: User) {
+        require(user is ProtoBuffUser)
+
+        dataStore.updateData { userPreferences ->
+            val updatedUser = PrefUser.newBuilder()
+                .setUsername(user.username)
+                .setPassword(user.password)
+                .setMessages(user.message)
+                .build()
+
+            userPreferences.toBuilder().setUsers(user.index, updatedUser).build()
+        }
+    }
+
+
+    suspend fun updateStandardUser(user: User) {
         dataStore.updateData { userPreferences ->
             val prefUsers = userPreferences.usersList
             var index = -1
