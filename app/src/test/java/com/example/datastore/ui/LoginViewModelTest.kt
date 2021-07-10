@@ -5,11 +5,14 @@ import androidx.lifecycle.Observer
 import com.example.datastore.repository.Repository
 import com.example.datastore.util.MainCoroutineRule
 import com.example.datastore.utils.mock
+import com.example.datastore.vo.StandardUser
+import com.example.datastore.vo.User
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 
 @ExperimentalCoroutinesApi
@@ -42,17 +45,18 @@ class LoginViewModelTest {
 
     @Test
     fun login(): Unit = runBlocking {
-        // `when`(repository.login("admin", "admin")).thenReturn(false)
-        // `when`(repository.login("valid", "valid")).thenReturn(true)
+        val user = StandardUser("valid", "valid", 2)
+        `when`(repository.login("admin", "admin")).thenReturn(User.NO_USER)
+        `when`(repository.login("valid", "valid")).thenReturn(user)
 
-        val observer = mock<Observer<Boolean>>()
+        val observer = mock<Observer<User>>()
         viewModel.loginResult.observeForever(observer)
 
         viewModel.login("admin", "admin")
         viewModel.login("valid", "valid")
 
-        verify(observer).onChanged(false)
-        verify(observer).onChanged(true)
+        verify(observer).onChanged(User.NO_USER)
+        verify(observer).onChanged(user)
         verify(repository).login("admin", "admin")
         verify(repository).login("valid", "valid")
     }
