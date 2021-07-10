@@ -24,6 +24,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import org.mockito.Mockito.verify
 
 
 @RunWith(AndroidJUnit4::class)
@@ -54,11 +55,12 @@ class HomeFragmentTest {
         private val flow = MutableStateFlow(initialUser)
 
         override suspend fun login(username: String, password: String): User {
-            TODO("Not yet implemented")
+            // no op
+            return User.NO_USER
         }
 
         override suspend fun register(username: String, password: String) {
-            TODO("Not yet implemented")
+            // no op
         }
 
         override fun getUserDetails(user: User): Flow<User> {
@@ -104,12 +106,12 @@ class HomeFragmentTest {
     //
     // }
     //
-    // @Test
-    // fun logout_NavigateToLogin() {
-    //     onView(withId(R.id.logout)).perform(click())
-    //
-    //     val directions = HomeFragmentDirections.actionLogout()
-    //     verify(navController).navigate(directions)
-    // }
+    @Test
+    fun logout_NavigateToLogin() {
+        onView(withId(R.id.logout)).perform(click())
+
+        val directions = HomeFragmentDirections.actionLogout()
+        verify(navController).navigate(directions)
+    }
 
 }

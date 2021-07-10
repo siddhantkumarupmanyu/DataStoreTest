@@ -127,10 +127,15 @@ class LoginFragmentTest {
     //
     // @Test
     // @Ignore
-    // fun registrationError() {
+    // fun usernameAlreadyRegistered() {
     //     // TODO:
     // }
     //
+
+    // @Test
+    // fun emptyUsernameOrPassword(){
+    //    // TODO:
+    // }
 
     //
     // @Test
