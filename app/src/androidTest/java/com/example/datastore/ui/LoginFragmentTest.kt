@@ -117,11 +117,6 @@ class LoginFragmentTest {
     }
 
     @Test
-    fun login_ShowProgressBar() {
-        // TODO:
-    }
-
-    @Test
     fun navigateToHome(): Unit = runBlocking {
         onView(withId(R.id.username)).perform(typeText("test"))
         onView(withId(R.id.password)).perform(typeText("test"), closeSoftKeyboard())
@@ -133,18 +128,39 @@ class LoginFragmentTest {
         verify(repository).login("test", "test")
     }
 
+    // Won't be testing this
+    // @Test
+    // fun login_ShowProgressBar() {
+    // }
 
+    // I do not know how to get window flags
+    // guess have to rely on manual tests
+    // @Test
+    // fun disableInteractionWhileLoading(): Unit = runBlocking {
+    //     `when`(repository.login("delay", "delay")).then {
+    //         Thread.sleep(1000) // won't this hang the ui??
+    //         User.NO_USER
+    //     }
+    //
+    //     onView(withId(R.id.username)).perform(typeText("delay"))
+    //     onView(withId(R.id.password)).perform(typeText("delay"), closeSoftKeyboard())
+    //
+    //     onView(withId(R.id.login)).perform(click())
+    //
+    // }
+
+    // TODO:
     //
     // @Test
     // @Ignore
     // fun usernameAlreadyRegistered() {
-    //     // TODO:
+    //
     // }
     //
 
     // @Test
     // fun emptyUsernameOrPassword(){
-    //    // TODO:
+    //
     // }
 
     //

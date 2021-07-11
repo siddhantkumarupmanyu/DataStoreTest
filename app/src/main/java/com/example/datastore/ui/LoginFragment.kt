@@ -8,6 +8,7 @@ import android.text.InputType
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.view.animation.AnimationUtils
 import android.widget.EditText
 import android.widget.ImageView
@@ -50,6 +51,8 @@ class LoginFragment : Fragment() {
         setUpPasswordView(binding.passwordImageView, binding.password)
 
         loginViewModel.loginResult.observe(viewLifecycleOwner) {
+            stopProgressBar()
+
             if (it != User.NO_USER) {
                 findNavController().navigate(LoginFragmentDirections.actionLogin(it))
             } else {
@@ -66,6 +69,8 @@ class LoginFragment : Fragment() {
         }
 
         binding.login.setOnClickListener {
+            startProgressBar()
+
             loginViewModel.login(binding.username.text.toString(), binding.password.text.toString())
         }
 
@@ -78,6 +83,25 @@ class LoginFragment : Fragment() {
             Snackbar.make(binding.root, R.string.registration_success, Snackbar.LENGTH_SHORT)
                 .show()
         }
+    }
+
+    private fun startProgressBar() {
+        binding.progressLinear.visibility = View.INVISIBLE
+        binding.progressLinear.isIndeterminate = true
+        binding.progressLinear.visibility = View.VISIBLE
+
+        requireActivity().window.setFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE,
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        )
+    }
+
+    private fun stopProgressBar() {
+        binding.progressLinear.setProgressCompat(100, true)
+
+        requireActivity().window.clearFlags(
+            WindowManager.LayoutParams.FLAG_NOT_TOUCHABLE
+        )
     }
 
     private fun setUpPasswordView(imageView: ImageView, editText: EditText) {

@@ -8,6 +8,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.flow
+import kotlinx.coroutines.flow.flowOf
 import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert.fail
@@ -153,11 +154,12 @@ class DataStoreRepositoryTest {
         }
 
         override suspend fun updateUser(user: User) {
-            TODO("Not yet implemented")
+            // no op
         }
 
         override fun getSingleUser(user: User): Flow<User> {
-            TODO("Not yet implemented")
+            // no op
+            return flowOf(User.NO_USER)
         }
 
     }
