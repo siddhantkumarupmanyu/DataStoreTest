@@ -1,7 +1,7 @@
 package com.example.datastore.repository
 
 import com.example.datastore.datastore.DataStoreHelper
-import com.example.datastore.utils.mock
+import com.example.datastore.util.mock
 import com.example.datastore.vo.StandardUser
 import com.example.datastore.vo.User
 import kotlinx.coroutines.*

@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.datastore.repository.Repository
 import com.example.datastore.util.MainCoroutineRule
-import com.example.datastore.utils.mock
+import com.example.datastore.util.mock
 import com.example.datastore.vo.StandardUser
 import com.example.datastore.vo.User
 import kotlinx.coroutines.Dispatchers
