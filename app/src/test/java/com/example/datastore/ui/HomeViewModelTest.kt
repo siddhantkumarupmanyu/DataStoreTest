@@ -95,10 +95,10 @@ class HomeViewModelTest {
         verify(repository).generateMessage(user)
     }
 
-    @Test
-    @Ignore
-    fun decreaseMessageCount() {
-        // TODO:
-    }
+    // @Test
+    // @Ignore
+    // fun decreaseMessageCount() {
+    //     // TODO:
+    // }
 
 }

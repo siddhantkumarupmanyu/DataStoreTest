@@ -28,8 +28,6 @@ class DataStoreRepository(
     // TODO:
     // 2. Make initUser one time shot; definitely via tdd, so no unnecessary coroutine is created
     //      - see: https://medium.com/androiddevelopers/coroutines-on-android-part-iii-real-work-2ba8a2ec2f45
-    // 5. user can click login button multiple times
-    //      - so disable button and show a progress bar
 
     override fun initUsers(coroutineScope: CoroutineScope) {
         coroutineScope.launch {
