@@ -46,7 +46,7 @@ jobs:
     name: Instrumented Test
     runs-on: macOS-latest # enables hardware acceleration in the virtual machine
     timeout-minutes: 30
-    statergy:
+    strategy:
       matrix:
         api-level: [23, 29]
 
