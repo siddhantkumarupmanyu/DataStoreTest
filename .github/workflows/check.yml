@@ -56,15 +56,15 @@ jobs:
 
       - name: Setup JDK
         uses: actions/setup-java@v1
-          with:
-            java-version: 11
+        with:
+          java-version: 11
 
       - uses: actions/cache@v2
-          with:
-            path: |
-              ~/.gradle/caches
-              ~/.gradle/wrapper
-            key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
 
       - uses: actions/cache@v2
         id: avd-cache
