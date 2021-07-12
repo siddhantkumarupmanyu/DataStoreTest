@@ -83,7 +83,7 @@ class DataStoreRepositoryTest {
         repositoryWithMock.initUsers(customScope)
         repositoryWithMock.initUsers(customScope)
 
-        // also i could test it via scope too by; but YAGNI
+        // i could test it via scope too; but YAGNI
         verify(mockHelper, times(1)).users
     }
 
@@ -91,7 +91,7 @@ class DataStoreRepositoryTest {
 
     @Test
     fun loginValidUser() = runBlocking {
-        // IDK what dispatcher to use here
+        // IDK which dispatcher to use
         val customScope = CoroutineScope(SupervisorJob() + Dispatchers.Unconfined)
 
         val user = StandardUser("test", "test", 2)
