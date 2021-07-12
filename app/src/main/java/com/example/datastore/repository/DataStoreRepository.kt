@@ -9,7 +9,6 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-import kotlin.coroutines.coroutineContext
 import kotlin.random.Random
 
 class DataStoreRepository(
@@ -24,42 +23,30 @@ class DataStoreRepository(
 
     private lateinit var users: List<User>
 
-    // TODO:
-    // the problem is I do not want initUsers to be visible to clients
-    // one way is to just pass scope in constructor, that requires hilt some configuration;
-    // but question here is should i
-    // other way is two make two repositories; one specifically for login and other for user
+    private var initUserCoroutine = false
 
-    private suspend fun initUsers() {
-        // https://stackoverflow.com/questions/55103285/launching-coroutines-from-a-suspended-function
-        // https://elizarov.medium.com/coroutine-context-and-scope-c8b255d59055
-        // i should not do this
-        // and go for better design
-        // TODO: fix this bad design
+    override fun initUsers(coroutineScope: CoroutineScope) {
+        // is this how yagni is applied?
+        if (!initUserCoroutine) {
+            coroutineScope.launch {
+                initUserCoroutine = true
 
-        CoroutineScope(coroutineContext).launch {
-            dataStoreHelper.users
-                .collectLatest {
-                    users = it
-                }
+                dataStoreHelper.users
+                    .collectLatest {
+                        users = it
+                    }
+            }
         }
     }
 
     override suspend fun login(username: String, password: String): User {
-        // TODO: fix this design
-        // see initUsers comments
-        // since we are loading users list lazily when login is clicked
-        // it may take some time
-        // therefore it Would be better if we just return a status that says we are currently loading.
-        // which in turn brings back Result sealed class
-
-        if (!::users.isInitialized) {
-            initUsers()
+        if (!initUserCoroutine) {
+            // should replace it with Custom exception lets leave it for now,
+            // BTW, this is a programmatic exception so no need to check it in viewModel
+            throw RuntimeException("Users Not Initialized")
         }
 
-        while (!::users.isInitialized) {
-            delay(16)
-        }
+        waitTillUsersBecomeActive()
 
         for (user in users) {
             if ((user.username == username) && (user.password == password)) {
@@ -67,6 +54,12 @@ class DataStoreRepository(
             }
         }
         return User.NO_USER
+    }
+
+    private suspend fun waitTillUsersBecomeActive() {
+        while (!::users.isInitialized) {
+            delay(16)
+        }
     }
 
     override fun getUserDetails(user: User): Flow<User> {
@@ -81,3 +74,8 @@ class DataStoreRepository(
         dataStoreHelper.updateUser(user.updateUser(user.password, random()))
     }
 }
+
+// references
+// https://stackoverflow.com/questions/55103285/launching-coroutines-from-a-suspended-function
+// https://elizarov.medium.com/coroutine-context-and-scope-c8b255d59055
+// https://medium.com/androiddevelopers/coroutines-on-android-part-iii-real-work-2ba8a2ec2f45

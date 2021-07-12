@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.datastore.repository.Repository
 import com.example.datastore.util.MainCoroutineRule
-import com.example.datastore.utils.mock
+import com.example.datastore.util.mock
 import com.example.datastore.vo.StandardUser
 import com.example.datastore.vo.User
 import kotlinx.coroutines.Dispatchers
@@ -15,7 +15,6 @@ import kotlinx.coroutines.flow.flow
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
-import org.junit.Ignore
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.`when`
@@ -39,6 +38,9 @@ class HomeViewModelTest {
     fun setUp() {
         viewModel = HomeViewModel(repository)
     }
+
+    // TODO: instead of using mock i should use fake
+    // these are the so complex and flaky at the same time
 
     @ExperimentalCoroutinesApi
     @Test
@@ -79,7 +81,7 @@ class HomeViewModelTest {
 
         val flow: Flow<User> = flow {
             emit(user)
-        }.flowOn(Dispatchers.IO)
+        }
 
         `when`(repository.getUserDetails(requestingUser)).thenReturn(flow)
 
@@ -89,16 +91,18 @@ class HomeViewModelTest {
         viewModel.initUser(requestingUser)
         viewModel.generateMessages()
 
+        delay(40)
+
         verify(observer).onChanged(user)
 
         verify(repository).getUserDetails(requestingUser)
         verify(repository).generateMessage(user)
     }
 
-    @Test
-    @Ignore
-    fun decreaseMessageCount() {
-        // TODO:
-    }
+    // @Test
+    // @Ignore
+    // fun decreaseMessageCount() {
+    //     // TODO:
+    // }
 
 }

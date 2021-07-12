@@ -10,7 +10,11 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.datastore.R
 import com.example.datastore.di.RepositoryModule
 import com.example.datastore.repository.Repository
-import com.example.datastore.utils.*
+import com.example.datastore.util.mock
+import com.example.datastore.utils.DataBindingIdlingResourceRule
+import com.example.datastore.utils.DisableAnimationRule
+import com.example.datastore.utils.TaskExecutorWithIdlingResource
+import com.example.datastore.utils.launchInHiltContainer
 import com.example.datastore.vo.StandardUser
 import com.example.datastore.vo.User
 import dagger.hilt.android.testing.BindValue
@@ -22,8 +26,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.*
 
 @RunWith(AndroidJUnit4::class)
 @UninstallModules(RepositoryModule::class)
@@ -90,6 +93,7 @@ class LoginFragmentTest {
 
         onView(withId(R.id.login)).perform(click())
 
+        verify(repository, times(1)).initUsers(com.example.datastore.util.any())
         verify(repository).login("test", "test")
     }
 
@@ -108,6 +112,7 @@ class LoginFragmentTest {
             )
         )
 
+        verify(repository, times(1)).initUsers(com.example.datastore.util.any())
         verify(repository).login("admin", "admin")
     }
 
@@ -123,18 +128,39 @@ class LoginFragmentTest {
         verify(repository).login("test", "test")
     }
 
+    // Won't be testing this
+    // @Test
+    // fun login_ShowProgressBar() {
+    // }
 
+    // I do not know how to get window flags
+    // guess have to rely on manual tests
+    // @Test
+    // fun disableInteractionWhileLoading(): Unit = runBlocking {
+    //     `when`(repository.login("delay", "delay")).then {
+    //         Thread.sleep(1000) // won't this hang the ui??
+    //         User.NO_USER
+    //     }
+    //
+    //     onView(withId(R.id.username)).perform(typeText("delay"))
+    //     onView(withId(R.id.password)).perform(typeText("delay"), closeSoftKeyboard())
+    //
+    //     onView(withId(R.id.login)).perform(click())
+    //
+    // }
+
+    // TODO:
     //
     // @Test
     // @Ignore
     // fun usernameAlreadyRegistered() {
-    //     // TODO:
+    //
     // }
     //
 
     // @Test
     // fun emptyUsernameOrPassword(){
-    //    // TODO:
+    //
     // }
 
     //

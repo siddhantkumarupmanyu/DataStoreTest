@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.example.datastore.repository.Repository
 import com.example.datastore.util.MainCoroutineRule
-import com.example.datastore.utils.mock
+import com.example.datastore.util.mock
 import com.example.datastore.vo.StandardUser
 import com.example.datastore.vo.User
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -12,8 +12,7 @@ import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.*
 
 @ExperimentalCoroutinesApi
 class LoginViewModelTest {
@@ -57,6 +56,8 @@ class LoginViewModelTest {
 
         verify(observer).onChanged(User.NO_USER)
         verify(observer).onChanged(user)
+
+        verify(repository, times(1)).initUsers(com.example.datastore.util.any())
         verify(repository).login("admin", "admin")
         verify(repository).login("valid", "valid")
     }

@@ -51,8 +51,6 @@ class EndToEndTest {
 
         onView(withId(R.id.login)).perform(click())
 
-        Thread.sleep(1000)
-
         onView(withId(R.id.home_username)).check(matches(withText("test")))
 
         onView(withId(R.id.generate_messages)).perform(click())

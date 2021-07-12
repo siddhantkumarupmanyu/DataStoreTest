@@ -11,13 +11,18 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.example.datastore.R
 import com.example.datastore.di.RepositoryModule
 import com.example.datastore.repository.Repository
-import com.example.datastore.utils.*
+import com.example.datastore.util.mock
+import com.example.datastore.utils.DataBindingIdlingResourceRule
+import com.example.datastore.utils.DisableAnimationRule
+import com.example.datastore.utils.TaskExecutorWithIdlingResource
+import com.example.datastore.utils.launchInHiltContainer
 import com.example.datastore.vo.StandardUser
 import com.example.datastore.vo.User
 import dagger.hilt.android.testing.BindValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import dagger.hilt.android.testing.UninstallModules
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import org.junit.Before
@@ -53,6 +58,10 @@ class HomeFragmentTest {
         private val initialUser = StandardUser("test", "test", 2)
 
         private val flow = MutableStateFlow(initialUser)
+
+        override fun initUsers(coroutineScope: CoroutineScope) {
+            // no op
+        }
 
         override suspend fun login(username: String, password: String): User {
             // no op

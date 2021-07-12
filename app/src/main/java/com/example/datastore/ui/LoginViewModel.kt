@@ -19,6 +19,10 @@ class LoginViewModel @Inject constructor(
 
     val loginResult: LiveData<User> = _loginResult
 
+    init {
+        repository.initUsers(viewModelScope)
+    }
+
     fun login(username: String, password: String) {
         viewModelScope.launch {
             _loginResult.value = repository.login(username, password)
