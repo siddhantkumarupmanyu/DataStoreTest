@@ -2,7 +2,7 @@
 # https://github.com/JakeWharton/RxBinding/blob/master/.github/workflows/build.yml
 # https://github.com/actions/cache/blob/main/examples.md#java---gradle
 
-name: build
+name: check
 
 on:
   pull_request:
@@ -72,7 +72,7 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-            key: avd
+          key: avd
 
       - name: Generate AVD snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
