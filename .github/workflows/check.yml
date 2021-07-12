@@ -1,0 +1,96 @@
+# https://github.com/ReactiveCircus/FlowBinding/blob/main/.github/workflows/build.yml
+# https://github.com/JakeWharton/RxBinding/blob/master/.github/workflows/build.yml
+# https://github.com/actions/cache/blob/main/examples.md#java---gradle
+
+name: build
+
+on:
+  pull_request:
+    branches:
+      - main
+
+  push:
+    branches:
+      - main
+
+env:
+  GRADLE_OPTS: -Dkotlin.incremental=false -Dorg.gradle.jvmargs="-Xmx4g -XX:+HeapDumpOnOutOfMemoryError"
+
+jobs:
+  unit-test:
+    name: Unit Test
+    runs-on: ubuntu-latest
+    env:
+      JAVA_TOOL_OPTIONS: -Xmx4g -XX:+UseParallelGC
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup JDK
+        uses: actions/setup-java@v1
+        with:
+          java-version: 11
+
+      - uses: actions/cache@v2
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      - name: Run Unit Tests
+        run: ./gradlew test
+
+  instrumented-test:
+    name: Instrumented Test
+    runs-on: macOS-latest # enables hardware acceleration in the virtual machine
+    timeout-minutes: 30
+    statergy:
+      matrix:
+        api-level: [23, 29]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Setup JDK
+          uses: actions/setup-java@v1
+          with:
+            java-version: 11
+
+      - uses: actions/cache@v2
+          with:
+            path: |
+              ~/.gradle/caches
+              ~/.gradle/wrapper
+            key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*', '**/gradle-wrapper.properties') }}
+
+      - uses: actions/cache@v2
+        id: avd-cache
+        with:
+          path: |
+            ~/.android/avd/*
+            ~/.android/adb*
+            key: avd
+
+      - name: Generate AVD snapshot for caching
+        if: steps.avd-cache.outputs.cache-hit != 'true'
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86
+          force-avd-creation: false
+          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          disable-animations: false
+          script: echo "Generated AVD snapshot for caching."
+
+      - name: Run instrumentation tests
+        uses: reactivecircus/android-emulator-runner@v2
+        with:
+          api-level: ${{ matrix.api-level }}
+          arch: x86
+          force-avd-creation: false
+          disable-animations: false
+          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+          script: ./gradlew connectedCheck
