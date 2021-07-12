@@ -25,18 +25,17 @@ class DataStoreRepository(
 
     private var initUserCoroutine = false
 
-    // TODO:
-    // 2. Make initUser one time shot; definitely via tdd, so no unnecessary coroutine is created
-    //      - see: https://medium.com/androiddevelopers/coroutines-on-android-part-iii-real-work-2ba8a2ec2f45
-
     override fun initUsers(coroutineScope: CoroutineScope) {
-        coroutineScope.launch {
-            initUserCoroutine = true
+        // is this how yagni is applied?
+        if (!initUserCoroutine) {
+            coroutineScope.launch {
+                initUserCoroutine = true
 
-            dataStoreHelper.users
-                .collectLatest {
-                    users = it
-                }
+                dataStoreHelper.users
+                    .collectLatest {
+                        users = it
+                    }
+            }
         }
     }
 

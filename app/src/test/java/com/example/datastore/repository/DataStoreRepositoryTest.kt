@@ -13,8 +13,7 @@ import org.hamcrest.CoreMatchers.`is`
 import org.hamcrest.MatcherAssert.assertThat
 import org.junit.Assert.fail
 import org.junit.Test
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.verify
+import org.mockito.Mockito.*
 
 private const val randomNumber = 4
 
@@ -73,6 +72,19 @@ class DataStoreRepositoryTest {
         val result = repositoryWithMock.login("test", "test")
 
         assertThat(result, `is`(user))
+    }
+
+    @Test
+    fun initUsersShouldLaunchOnlyOnce() = runBlockingWithCustomScope { _, customScope ->
+        val user = StandardUser("test", "pass", randomNumber)
+        `when`(mockHelper.users).thenReturn(flowOf(listOf(user)))
+
+        repositoryWithMock.initUsers(customScope)
+        repositoryWithMock.initUsers(customScope)
+        repositoryWithMock.initUsers(customScope)
+
+        // also i could test it via scope too by; but YAGNI
+        verify(mockHelper, times(1)).users
     }
 
     // USES FAKE
