@@ -72,7 +72,7 @@ jobs:
           path: |
             ~/.android/avd/*
             ~/.android/adb*
-          key: avd
+          key: avd-v0
 
       - name: Generate AVD snapshot for caching
         if: steps.avd-cache.outputs.cache-hit != 'true'
