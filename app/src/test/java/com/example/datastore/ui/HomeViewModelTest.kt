@@ -7,12 +7,9 @@ import com.example.datastore.util.MainCoroutineRule
 import com.example.datastore.util.mock
 import com.example.datastore.vo.StandardUser
 import com.example.datastore.vo.User
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
-import kotlinx.coroutines.flow.flowOn
+import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.runBlocking
 import org.junit.Before
 import org.junit.Rule
@@ -39,9 +36,6 @@ class HomeViewModelTest {
         viewModel = HomeViewModel(repository)
     }
 
-    // TODO: instead of using mock i should use fake
-    // these are the so complex and flaky at the same time
-
     @ExperimentalCoroutinesApi
     @Test
     fun getUser(): Unit = runBlocking {
@@ -50,40 +44,35 @@ class HomeViewModelTest {
         val user: User = StandardUser("test", "test", 2)
         val updatedUser: User = StandardUser("test", "test", 5)
 
-        val flow: Flow<User> = flow {
-            emit(user)
-            delay(20)
-            emit(updatedUser)
-        }.flowOn(Dispatchers.IO)
+        val userFlow = MutableStateFlow(user)
 
-        `when`(repository.getUserDetails(requestingUser)).thenReturn(flow)
+        `when`(repository.getUserDetails(requestingUser)).thenReturn(userFlow)
 
         val observer = mock<Observer<User>>()
         viewModel.user.observeForever(observer)
 
         viewModel.initUser(requestingUser)
 
-        delay(40)
-
+        // delay so that viewModelScope collects the latest value
+        delay(20)
         verify(observer).onChanged(user)
+
+        userFlow.emit(updatedUser)
+        delay(20)
         verify(observer).onChanged(updatedUser)
 
         verify(repository).getUserDetails(requestingUser)
     }
 
-    // If I would have used repository's fake instead of mock here
-    // how easy things would have been
     @Test
     fun generateMessage() = runBlocking {
         val requestingUser = StandardUser("test", "test", -1)
 
         val user: User = StandardUser("test", "test", 2)
 
-        val flow: Flow<User> = flow {
-            emit(user)
-        }
+        val userFlow = MutableStateFlow(user)
 
-        `when`(repository.getUserDetails(requestingUser)).thenReturn(flow)
+        `when`(repository.getUserDetails(requestingUser)).thenReturn(userFlow)
 
         val observer = mock<Observer<User>>()
         viewModel.user.observeForever(observer)
@@ -91,8 +80,8 @@ class HomeViewModelTest {
         viewModel.initUser(requestingUser)
         viewModel.generateMessages()
 
-        delay(40)
-
+        // delay so that viewModelScope collects the latest value
+        delay(20)
         verify(observer).onChanged(user)
 
         verify(repository).getUserDetails(requestingUser)
